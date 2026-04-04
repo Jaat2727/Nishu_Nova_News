@@ -1,0 +1,10 @@
+.news-card { background: #1a1a1a; border-radius: 12px; overflow: hidden; border: 1px solid #333; display: flex; flex-direction: column; }
+.news-card img { width: 100%; height: 200px; object-fit: cover; }
+.card-content { padding: 1rem; display: flex; flex-direction: column; gap: 0.8rem; flex: 1; }
+.card-content h3 { font-size: 1rem; line-height: 1.4; }
+.card-content p { color: #888; font-size: 0.9rem; line-height: 1.5; }
+.summary { background: #0d2137; padding: 0.8rem; border-radius: 8px; font-size: 0.9rem; border-left: 3px solid #f0a500; }
+.card-actions { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-top: auto; }
+.card-actions a { padding: 0.5rem 0.8rem; background: #333; color: #fff; border-radius: 6px; text-decoration: none; font-size: 0.85rem; }
+.card-actions button { padding: 0.5rem 0.8rem; background: #f0a500; color: #000; border: none; border-radius: 6px; cursor: pointer; font-size: 0.85rem; font-weight: 600; }
+.save-btn { background: #27ae60 !important; color: #fff !important; }

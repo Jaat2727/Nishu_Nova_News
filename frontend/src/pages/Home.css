@@ -1,0 +1,8 @@
+.home { padding: 2rem; max-width: 1400px; margin: 0 auto; }
+.search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
+.search-bar input { flex: 1; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; font-size: 1rem; }
+.search-bar button { padding: 0.8rem 1.5rem; background: #f0a500; color: #000; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
+.categories { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
+.categories button { padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid #333; background: #1a1a1a; color: #fff; cursor: pointer; }
+.categories button.active { background: #f0a500; color: #000; border-color: #f0a500; }
+.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
