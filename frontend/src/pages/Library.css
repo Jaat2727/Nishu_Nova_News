@@ -1,6 +1,177 @@
-.library { padding: 2rem; max-width: 1400px; margin: 0 auto; }
-.library h2 { font-size: 2rem; margin-bottom: 2rem; }
-.library-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
-.library-card { background: #1a1a1a; border-radius: 12px; overflow: hidden; border: 1px solid #333; }
-.library-card img { width: 100%; height: 200px; object-fit: cover; }
-.remove-btn { background: #c0392b !important; color: #fff !important; }
+/* ===== LIBRARY PAGE ===== */
+
+.library {
+  padding: 2.5rem 2rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.library-header {
+  margin-bottom: 2.5rem;
+  padding-bottom: 1.5rem;
+  border-bottom: 1px solid var(--border);
+}
+
+.library-header h2 {
+  font-size: 2rem;
+  font-weight: 800;
+  background: linear-gradient(135deg, #f0f6fc 30%, #c4b5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.3rem;
+}
+
+.library-header p {
+  color: var(--text-secondary);
+  font-size: 0.9rem;
+}
+
+.library-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1.75rem;
+}
+
+/* Library card */
+.library-card {
+  background: var(--bg-card);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  border: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  backdrop-filter: blur(12px);
+  transition: var(--transition);
+}
+
+.library-card:hover {
+  transform: translateY(-5px);
+  border-color: var(--border-hover);
+  box-shadow: 0 12px 35px rgba(0,0,0,0.35), var(--shadow-glow);
+}
+
+.library-card .card-thumbnail {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+  border-bottom: 1px solid var(--border);
+  background: var(--bg-secondary);
+  flex-shrink: 0;
+}
+
+.library-card .card-thumbnail img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s;
+}
+
+.library-card:hover .card-thumbnail img { transform: scale(1.04); }
+
+.library-card .card-content {
+  padding: 1.35rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  flex: 1;
+}
+
+.library-card h3 {
+  font-family: 'Outfit', sans-serif;
+  font-size: 1rem;
+  line-height: 1.45;
+  color: var(--text-primary);
+  font-weight: 600;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.library-card p {
+  color: var(--text-secondary);
+  font-size: 0.85rem;
+  line-height: 1.6;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.library-card .summary {
+  background: rgba(139, 92, 246, 0.07);
+  padding: 0.8rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.85rem;
+  border-left: 3px solid var(--accent);
+  color: #d4d4f4;
+  line-height: 1.6;
+}
+
+.library-card .summary strong {
+  color: #c4b5fd;
+  display: block;
+  margin-bottom: 0.3rem;
+  font-size: 0.75rem;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.library-card .card-actions {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: auto;
+  padding-top: 1rem;
+  border-top: 1px solid var(--border);
+}
+
+.library-card .btn-read {
+  padding: 0.55rem 1rem;
+  background: var(--bg-card);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  text-decoration: none;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+}
+
+.library-card .btn-read:hover {
+  background: rgba(255,255,255,0.07);
+  color: var(--text-primary);
+}
+
+.remove-btn {
+  margin-left: auto;
+  padding: 0.55rem 1rem;
+  background: transparent;
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 0.82rem;
+  font-weight: 500;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.remove-btn:hover {
+  background: rgba(239, 68, 68, 0.1);
+  border-color: rgba(239, 68, 68, 0.4);
+}
+
+.saved-date {
+  font-size: 0.75rem;
+  color: var(--text-muted);
+  margin-top: auto;
+}
+
+@media (max-width: 480px) {
+  .library-grid { grid-template-columns: 1fr; }
+  .library { padding: 1.5rem 1rem 3rem; }
+}

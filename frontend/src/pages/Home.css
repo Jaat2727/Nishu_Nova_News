@@ -1,8 +1,148 @@
-.home { padding: 2rem; max-width: 1400px; margin: 0 auto; }
-.search-bar { display: flex; gap: 1rem; margin-bottom: 1.5rem; }
-.search-bar input { flex: 1; padding: 0.8rem 1rem; border-radius: 8px; border: 1px solid #333; background: #1a1a1a; color: #fff; font-size: 1rem; }
-.search-bar button { padding: 0.8rem 1.5rem; background: #f0a500; color: #000; border: none; border-radius: 8px; cursor: pointer; font-weight: 600; }
-.categories { display: flex; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 2rem; }
-.categories button { padding: 0.5rem 1rem; border-radius: 20px; border: 1px solid #333; background: #1a1a1a; color: #fff; cursor: pointer; }
-.categories button.active { background: #f0a500; color: #000; border-color: #f0a500; }
-.news-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 1.5rem; }
+/* ===== HOME PAGE ===== */
+
+.home {
+  padding: 2.5rem 2rem 4rem;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Hero section */
+.home-hero {
+  text-align: center;
+  padding: 2.5rem 0 2rem;
+  margin-bottom: 2rem;
+}
+
+.home-hero h2 {
+  font-size: clamp(1.8rem, 4vw, 2.6rem);
+  font-weight: 800;
+  background: linear-gradient(135deg, #f0f6fc 30%, #c4b5fd);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 0.5rem;
+  line-height: 1.2;
+}
+
+.home-hero p {
+  color: var(--text-secondary);
+  font-size: 1rem;
+}
+
+/* Search */
+.search-bar {
+  display: flex;
+  gap: 0.75rem;
+  margin-bottom: 1.75rem;
+  max-width: 680px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.search-bar input {
+  flex: 1;
+  padding: 0.9rem 1.4rem;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.04);
+  backdrop-filter: blur(12px);
+  color: var(--text-primary);
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  transition: var(--transition);
+}
+
+.search-bar input::placeholder { color: var(--text-muted); }
+
+.search-bar input:focus {
+  border-color: var(--accent);
+  background: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  outline: none;
+}
+
+.search-bar button {
+  padding: 0.9rem 1.75rem;
+  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius-md);
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.9rem;
+  font-family: 'Inter', sans-serif;
+  letter-spacing: 0.03em;
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.35);
+  transition: var(--transition);
+  white-space: nowrap;
+}
+
+.search-bar button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 28px rgba(139, 92, 246, 0.45);
+}
+
+.search-bar button:active { transform: translateY(0); }
+
+/* Categories */
+.categories {
+  display: flex;
+  gap: 0.6rem;
+  flex-wrap: wrap;
+  justify-content: center;
+  margin-bottom: 2.5rem;
+}
+
+.categories button {
+  padding: 0.5rem 1.1rem;
+  border-radius: 99px;
+  border: 1px solid var(--border);
+  background: rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(6px);
+  color: var(--text-secondary);
+  font-weight: 500;
+  font-size: 0.85rem;
+  font-family: 'Inter', sans-serif;
+  cursor: pointer;
+  transition: var(--transition);
+}
+
+.categories button:hover {
+  border-color: rgba(139, 92, 246, 0.4);
+  color: #d4c6ff;
+  background: rgba(139, 92, 246, 0.05);
+}
+
+.categories button.active {
+  background: rgba(139, 92, 246, 0.12);
+  color: #c4b5fd;
+  border-color: rgba(139, 92, 246, 0.5);
+  box-shadow: 0 0 18px rgba(139, 92, 246, 0.18);
+}
+
+/* Results header */
+.results-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1.5rem;
+  padding: 0 0.25rem;
+}
+
+.results-count {
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* News grid */
+.news-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(330px, 1fr));
+  gap: 1.75rem;
+}
+
+@media (max-width: 480px) {
+  .news-grid { grid-template-columns: 1fr; }
+  .home { padding: 1.5rem 1rem 3rem; }
+}

@@ -12,23 +12,24 @@ function App() {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null)
       setLoading(false)
     })
 
-    // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (_event, session) => {
-        setUser(session?.user ?? null)
-      }
-    )
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
 
     return () => subscription.unsubscribe()
   }, [])
 
-  if (loading) return <div className="loading">Loading...</div>
+  if (loading) return (
+    <div className="loading-screen">
+      <div className="loading-spinner" />
+      <span className="loading-text">Loading NovaNews...</span>
+    </div>
+  )
 
   return (
     <BrowserRouter>
