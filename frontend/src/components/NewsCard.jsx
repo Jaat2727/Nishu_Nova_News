@@ -11,10 +11,10 @@ const CATEGORY_ICONS = {
   sports: '⚽', entertainment: '🎬', general: '📰'
 }
 
-export default function NewsCard({ article, user }) {
+export default function NewsCard({ article, user, alreadySaved = false, onSaved }) {
   const [summary, setSummary] = useState('')
   const [loadingSummary, setLoadingSummary] = useState(false)
-  const [saved, setSaved] = useState(false)
+  const [saved, setSaved] = useState(alreadySaved)
   const [imgError, setImgError] = useState(false)
 
   const hasImage = article.urlToImage && !imgError
@@ -36,6 +36,7 @@ export default function NewsCard({ article, user }) {
   }
 
   const saveArticle = async () => {
+    if (saved) return // Already saved — do nothing
     try {
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
@@ -51,6 +52,7 @@ export default function NewsCard({ article, user }) {
         headers: { Authorization: `Bearer ${token}` }
       })
       setSaved(true)
+      if (onSaved) onSaved(article.url)
     } catch (err) {
       console.error('Failed to save article:', err)
       alert("Couldn't save the article. Please try again.")
@@ -78,6 +80,7 @@ export default function NewsCard({ article, user }) {
           </div>
         )}
         <span className="card-source">{sourceName}</span>
+        {saved && <span className="card-saved-badge">✓ Saved</span>}
       </div>
 
       <div className="card-content">
@@ -115,7 +118,7 @@ export default function NewsCard({ article, user }) {
               disabled={saved}
               className={`btn-save ${saved ? 'saved' : ''}`}
             >
-              {saved ? '✓ Saved' : '🔖 Save'}
+              {saved ? (alreadySaved ? '📌 Already Saved' : '✓ Saved') : '🔖 Save'}
             </button>
           )}
         </div>

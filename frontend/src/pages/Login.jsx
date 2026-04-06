@@ -98,14 +98,27 @@ function EyeBall({
    Main Login Page
 ──────────────────────────────────────────── */
 export default function Login() {
+  // Auth mode
+  const [mode, setMode] = useState('signin') // 'signin' | 'signup'
+
+  // Form fields
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [confirmPw, setConfirmPw] = useState('')
+  const [fullName, setFullName] = useState('')
+  const [showPassword, setShowPassword] = useState(false)
+
+  // Feedback
+  const [error, setError] = useState('')
+  const [success, setSuccess] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  // Character animation state
   const [isPurpleBlinking, setIsPurpleBlinking] = useState(false)
   const [isBlackBlinking, setIsBlackBlinking] = useState(false)
   const [isTyping, setIsTyping] = useState(false)
   const [isLookingAtEachOther, setIsLookingAtEachOther] = useState(false)
   const [isPurplePeeking, setIsPurplePeeking] = useState(false)
-  const [showPassword, setShowPassword] = useState(false)
-  const [password, setPassword] = useState('')
-  const [isLoading, setIsLoading] = useState(false)
 
   const [mouse, setMouse] = useState({ x: 0, y: 0 })
   const purpleRef = useRef(null)
@@ -119,7 +132,7 @@ export default function Login() {
     return () => window.removeEventListener('mousemove', onMove)
   }, [])
 
-  /* Random blinking for purple */
+  /* Random blinking – purple */
   useEffect(() => {
     const schedule = () => {
       const t = setTimeout(() => {
@@ -132,7 +145,7 @@ export default function Login() {
     return () => clearTimeout(t)
   }, [])
 
-  /* Random blinking for black */
+  /* Random blinking – black */
   useEffect(() => {
     const schedule = () => {
       const t = setTimeout(() => {
@@ -145,7 +158,7 @@ export default function Login() {
     return () => clearTimeout(t)
   }, [])
 
-  /* Characters look at each other when typing */
+  /* Characters look at each other when typing starts */
   useEffect(() => {
     if (isTyping) {
       setIsLookingAtEachOther(true)
@@ -156,7 +169,7 @@ export default function Login() {
     }
   }, [isTyping])
 
-  /* Purple sneaky peek when password is shown */
+  /* Purple sneaky peek when password is visible */
   useEffect(() => {
     if (password.length > 0 && showPassword) {
       const schedule = () => {
@@ -173,7 +186,7 @@ export default function Login() {
     }
   }, [password, showPassword, isPurplePeeking])
 
-  /* Calculate lean + face offset per character */
+  /* Calculate lean + face offset */
   const calcPos = (ref) => {
     if (!ref?.current) return { faceX: 0, faceY: 0, bodySkew: 0 }
     const r = ref.current.getBoundingClientRect()
@@ -194,7 +207,71 @@ export default function Login() {
   const passwordVisible = password.length > 0 && showPassword
   const passwordHidden  = password.length > 0 && !showPassword
 
-  /* Google OAuth */
+  /* ── Auth handlers ── */
+
+  const handleEmailSignIn = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+    setIsLoading(true)
+
+    const { error: err } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (err) {
+      setError(err.message)
+    }
+    setIsLoading(false)
+  }
+
+  const handleEmailSignUp = async (e) => {
+    e.preventDefault()
+    setError('')
+    setSuccess('')
+
+    if (password !== confirmPw) {
+      setError('Passwords do not match.')
+      return
+    }
+    if (password.length < 6) {
+      setError('Password must be at least 6 characters.')
+      return
+    }
+
+    setIsLoading(true)
+
+    // Sign up (Supabase free tier has email send limits, so we auto-confirm)
+    const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
+      email,
+      password,
+      options: {
+        data: { full_name: fullName },
+      },
+    })
+
+    if (signUpErr) {
+      setError(signUpErr.message)
+      setIsLoading(false)
+      return
+    }
+
+    // Auto sign-in immediately after sign-up (no email confirmation needed)
+    const { error: signInErr } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    })
+
+    if (signInErr) {
+      // Account was created but auto-sign-in failed — show success anyway
+      setSuccess('Account created! Please sign in with your credentials.')
+      setMode('signin')
+    }
+    // If signIn succeeds, App.jsx onAuthStateChange will auto-redirect to /
+    setIsLoading(false)
+  }
+
   const handleGoogleLogin = async () => {
     setIsLoading(true)
     await supabase.auth.signInWithOAuth({
@@ -204,11 +281,23 @@ export default function Login() {
     setIsLoading(false)
   }
 
+  const switchMode = () => {
+    setMode(mode === 'signin' ? 'signup' : 'signin')
+    setError('')
+    setSuccess('')
+    setPassword('')
+    setConfirmPw('')
+  }
+
+  const onFocusField = () => setIsTyping(true)
+  const onBlurField  = () => setIsTyping(false)
+
+  const isSignUp = mode === 'signup'
+
   return (
     <div className="lp-root">
       {/* ── Left panel ── */}
       <div className="lp-left">
-        {/* Brand */}
         <div className="lp-brand">
           <div className="lp-brand-icon">⚡</div>
           <span className="lp-brand-name">NovaNews</span>
@@ -218,7 +307,7 @@ export default function Login() {
         <div className="lp-stage-wrap">
           <div className="lp-stage">
 
-            {/* Purple – back layer */}
+            {/* Purple — changed to #8B5CF6 so it pops against the darker gradient */}
             <div
               ref={purpleRef}
               className="lp-char lp-purple"
@@ -254,7 +343,7 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Black – middle layer */}
+            {/* Black */}
             <div
               ref={blackRef}
               className="lp-char lp-black"
@@ -289,7 +378,7 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Orange – front left semi-circle */}
+            {/* Orange */}
             <div
               ref={orangeRef}
               className="lp-char lp-orange"
@@ -316,7 +405,7 @@ export default function Login() {
               </div>
             </div>
 
-            {/* Yellow – front right pill */}
+            {/* Yellow */}
             <div
               ref={yellowRef}
               className="lp-char lp-yellow"
@@ -341,7 +430,6 @@ export default function Login() {
                   forceLookY={passwordVisible ? -4 : undefined}
                 />
               </div>
-              {/* Mouth */}
               <div
                 className="lp-mouth"
                 style={{
@@ -354,16 +442,21 @@ export default function Login() {
           </div>
         </div>
 
-        {/* Footer links */}
+        {/* Tagline */}
+        <div className="lp-left-tagline">
+          <h2>Your daily news, supercharged with AI.</h2>
+          <p>Instant summaries, personalized feeds, and a smarter way to stay informed.</p>
+        </div>
+
+        {/* Footer */}
         <div className="lp-left-footer">
-          <a href="#">Privacy Policy</a>
-          <a href="#">Terms of Service</a>
-          <a href="#">Contact</a>
+          <span>Made with ❤️ by Nishu</span>
         </div>
 
         {/* Decorative blobs */}
         <div className="lp-blob lp-blob-1" />
         <div className="lp-blob lp-blob-2" />
+        <div className="lp-grid-overlay" />
       </div>
 
       {/* ── Right panel ── */}
@@ -376,50 +469,16 @@ export default function Login() {
 
         <div className="lp-form-wrap">
           <div className="lp-header">
-            <h1>Welcome back!</h1>
-            <p>AI-powered news, personalized for you.</p>
+            <h1>{isSignUp ? 'Create your account' : 'Welcome back!'}</h1>
+            <p>{isSignUp ? 'Join NovaNews and start exploring.' : 'Sign in to your NovaNews account.'}</p>
           </div>
 
-          {/* Password field – still shown so characters react */}
-          <div className="lp-field">
-            <label htmlFor="lp-pw">Peek detection demo</label>
-            <div className="lp-pw-wrap">
-              <input
-                id="lp-pw"
-                type={showPassword ? 'text' : 'password'}
-                placeholder="Type something to see characters react…"
-                value={password}
-                onChange={(e) => setPassword(e.target.value)}
-                onFocus={() => setIsTyping(true)}
-                onBlur={() => setIsTyping(false)}
-                className="lp-input"
-                autoComplete="off"
-              />
-              <button
-                type="button"
-                className="lp-pw-toggle"
-                onClick={() => setShowPassword(!showPassword)}
-                aria-label={showPassword ? 'Hide' : 'Show'}
-              >
-                {showPassword ? '🙈' : '👁'}
-              </button>
-            </div>
-            <p className="lp-hint">
-              {passwordHidden
-                ? '🙈 Characters are looking away!'
-                : passwordVisible
-                  ? '👀 Purple is sneaky-peeking your password!'
-                  : '✨ Type a password and toggle visibility to see characters react'}
-            </p>
-          </div>
-
-          <div className="lp-divider"><span>Sign in to continue</span></div>
-
-          {/* Google OAuth */}
+          {/* ── Google OAuth ── */}
           <button
             className="lp-google-btn"
             onClick={handleGoogleLogin}
             disabled={isLoading}
+            type="button"
             id="google-signin-btn"
           >
             <svg className="lp-google-icon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
@@ -428,16 +487,131 @@ export default function Login() {
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
               <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
             </svg>
-            {isLoading ? 'Redirecting…' : 'Continue with Google'}
+            {isLoading ? 'Please wait…' : `Continue with Google`}
           </button>
 
-          {/* Feature grid */}
-          <div className="lp-features">
-            <div className="lp-feature"><span>✨</span><span>AI Summaries</span></div>
-            <div className="lp-feature"><span>📚</span><span>Save Articles</span></div>
-            <div className="lp-feature"><span>🌐</span><span>Global News</span></div>
-            <div className="lp-feature"><span>🔒</span><span>Secure &amp; Private</span></div>
-          </div>
+          {/* ── Divider ── */}
+          <div className="lp-divider"><span>or continue with email</span></div>
+
+          {/* ── Email / Password Form ── */}
+          <form onSubmit={isSignUp ? handleEmailSignUp : handleEmailSignIn} className="lp-form">
+
+            {isSignUp && (
+              <div className="lp-field">
+                <label htmlFor="lp-name">Full Name</label>
+                <input
+                  id="lp-name"
+                  type="text"
+                  placeholder="John Doe"
+                  value={fullName}
+                  onChange={(e) => setFullName(e.target.value)}
+                  onFocus={onFocusField}
+                  onBlur={onBlurField}
+                  className="lp-input"
+                  autoComplete="name"
+                />
+              </div>
+            )}
+
+            <div className="lp-field">
+              <label htmlFor="lp-email">Email</label>
+              <div className="lp-input-wrap">
+                <span className="lp-input-icon">✉</span>
+                <input
+                  id="lp-email"
+                  type="email"
+                  placeholder="you@example.com"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  onFocus={onFocusField}
+                  onBlur={onBlurField}
+                  className="lp-input lp-input-has-icon"
+                  autoComplete="email"
+                  required
+                />
+              </div>
+            </div>
+
+            <div className="lp-field">
+              <label htmlFor="lp-pw">Password</label>
+              <div className="lp-input-wrap">
+                <span className="lp-input-icon">🔒</span>
+                <input
+                  id="lp-pw"
+                  type={showPassword ? 'text' : 'password'}
+                  placeholder={isSignUp ? 'Min 6 characters' : '••••••••'}
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  onFocus={onFocusField}
+                  onBlur={onBlurField}
+                  className="lp-input lp-input-has-icon"
+                  autoComplete={isSignUp ? 'new-password' : 'current-password'}
+                  required
+                />
+                <button
+                  type="button"
+                  className="lp-pw-toggle"
+                  onClick={() => setShowPassword(!showPassword)}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
+                >
+                  {showPassword ? '🙈' : '👁'}
+                </button>
+              </div>
+            </div>
+
+            {isSignUp && (
+              <div className="lp-field">
+                <label htmlFor="lp-cpw">Confirm Password</label>
+                <div className="lp-input-wrap">
+                  <span className="lp-input-icon">🔒</span>
+                  <input
+                    id="lp-cpw"
+                    type={showPassword ? 'text' : 'password'}
+                    placeholder="Re-enter password"
+                    value={confirmPw}
+                    onChange={(e) => setConfirmPw(e.target.value)}
+                    onFocus={onFocusField}
+                    onBlur={onBlurField}
+                    className="lp-input lp-input-has-icon"
+                    autoComplete="new-password"
+                    required
+                  />
+                </div>
+              </div>
+            )}
+
+            {!isSignUp && (
+              <div className="lp-row-between">
+                <label className="lp-checkbox-label">
+                  <input type="checkbox" className="lp-checkbox" />
+                  <span>Remember me</span>
+                </label>
+                <a href="#" className="lp-link">Forgot password?</a>
+              </div>
+            )}
+
+            {error && <div className="lp-alert lp-alert-error">{error}</div>}
+            {success && <div className="lp-alert lp-alert-success">{success}</div>}
+
+            <button
+              type="submit"
+              className="lp-submit-btn"
+              disabled={isLoading}
+            >
+              {isLoading
+                ? (isSignUp ? 'Creating account…' : 'Signing in…')
+                : (isSignUp ? 'Create Account' : 'Sign In')
+              }
+            </button>
+          </form>
+
+          {/* Mode toggle */}
+          <p className="lp-switch-mode">
+            {isSignUp ? 'Already have an account?' : "Don't have an account?"}{' '}
+            <button type="button" className="lp-link-btn" onClick={switchMode}>
+              {isSignUp ? 'Sign In' : 'Sign Up'}
+            </button>
+          </p>
         </div>
       </div>
     </div>

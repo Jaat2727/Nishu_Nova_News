@@ -4,6 +4,7 @@ import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom'
 import Home from './pages/Home'
 import Library from './pages/Library'
 import Login from './pages/Login'
+import Contact from './pages/Contact'
 import Navbar from './components/Navbar'
 import './App.css'
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/login" element={!user ? <Login /> : <Navigate to="/" />} />
         <Route path="/" element={user ? <Home user={user} /> : <Navigate to="/login" />} />
         <Route path="/library" element={user ? <Library user={user} /> : <Navigate to="/login" />} />
+        <Route path="/contact" element={user ? <Contact /> : <Navigate to="/login" />} />
       </Routes>
     </BrowserRouter>
   )

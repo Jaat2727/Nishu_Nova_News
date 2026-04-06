@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react'
 import axios from 'axios'
+import { supabase } from '../supabaseClient'
 import NewsCard from '../components/NewsCard'
 import './Home.css'
 
@@ -17,6 +18,31 @@ export default function Home({ user }) {
   const [error, setError] = useState(null)
   const [search, setSearch] = useState('')
   const [category, setCategory] = useState('')
+  const [savedUrls, setSavedUrls] = useState(new Set())
+
+  // Fetch the user's saved article URLs once on mount
+  useEffect(() => {
+    const fetchSaved = async () => {
+      try {
+        const { data, error: err } = await supabase
+          .from('saved_articles')
+          .select('url')
+          .eq('user_id', user.id)
+
+        if (!err && data) {
+          setSavedUrls(new Set(data.map(a => a.url)))
+        }
+      } catch (e) {
+        console.error('Failed to load saved URLs:', e)
+      }
+    }
+    if (user) fetchSaved()
+  }, [user])
+
+  // Callback when a card saves — add URL to the set
+  const onArticleSaved = (url) => {
+    setSavedUrls(prev => new Set(prev).add(url))
+  }
 
   const fetchNews = async () => {
     setLoading(true)
@@ -94,7 +120,13 @@ export default function Home({ user }) {
           </div>
           <div className="news-grid">
             {articles.map((article, i) => (
-              <NewsCard key={`${article.url}-${i}`} article={article} user={user} />
+              <NewsCard
+                key={`${article.url}-${i}`}
+                article={article}
+                user={user}
+                alreadySaved={savedUrls.has(article.url)}
+                onSaved={onArticleSaved}
+              />
             ))}
           </div>
         </>

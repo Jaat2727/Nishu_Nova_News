@@ -102,6 +102,22 @@
   white-space: nowrap;
 }
 
+/* Already-saved badge on thumbnail */
+.card-saved-badge {
+  position: absolute;
+  top: 0.7rem;
+  right: 0.7rem;
+  background: rgba(16, 185, 129, 0.85);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.25rem 0.6rem;
+  border-radius: 6px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
 /* Card content */
 .card-content {
   padding: 1.4rem;

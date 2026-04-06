@@ -33,6 +33,12 @@ export default function Navbar({ user }) {
         >
           My Library
         </button>
+        <button
+          className={`nav-btn ${location.pathname === '/contact' ? 'active' : ''}`}
+          onClick={() => navigate('/contact')}
+        >
+          Contact
+        </button>
         <div className="nav-user">
           <div className="nav-avatar">{initial}</div>
           <span className="nav-email">{user.email}</span>
