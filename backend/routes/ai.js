@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 
-// Summarize an article using Google's Gemini AI (using official SDK)
+// Summarize an article using Google's Gemma 3 27B model (via Gemini API)
 router.post('/summarize', async (req, res) => {
   try {
     const { title, description } = req.body;
@@ -17,7 +17,7 @@ router.post('/summarize', async (req, res) => {
     }
 
     const genAI = new GoogleGenerativeAI(apiKey);
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
+    const model = genAI.getGenerativeModel({ model: 'gemma-3-27b-it' });
 
     const prompt = `Summarize this news article in exactly 2 clear, concise sentences that are easy for anyone to understand.
 Title: ${title}
@@ -29,10 +29,10 @@ Summary:`;
 
     res.json({ summary });
   } catch (error) {
-    console.error('Gemini error:', error.message || error);
+    console.error('Gemma 3 error:', error.message || error);
     res.status(500).json({
       error: 'Failed to generate summary.',
-      details: error.message || 'Unknown error from Gemini API'
+      details: error.message || 'Unknown error from Gemma 3 API'
     });
   }
 });

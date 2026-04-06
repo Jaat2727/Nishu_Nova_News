@@ -32,7 +32,8 @@ router.post('/', async (req, res) => {
     // Note: the backend database column is 'urltoimage' (all lowercase)
     const { data, error } = await supabase
       .from('saved_articles')
-      .insert([{ user_id, title, description, url, urltoimage: urlToImage, summary }]);
+      .insert([{ user_id, title, description, url, urltoimage: urlToImage, summary }])
+      .select();
 
     if (error) {
       console.error("Supabase insert error:", error.message);

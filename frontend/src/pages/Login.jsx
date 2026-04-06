@@ -242,7 +242,6 @@ export default function Login() {
 
     setIsLoading(true)
 
-    // Sign up (Supabase free tier has email send limits, so we auto-confirm)
     const { data: signUpData, error: signUpErr } = await supabase.auth.signUp({
       email,
       password,
@@ -257,18 +256,33 @@ export default function Login() {
       return
     }
 
-    // Auto sign-in immediately after sign-up (no email confirmation needed)
+    // If Supabase returned a session, the user is auto-confirmed — they're already logged in.
+    // App.jsx onAuthStateChange will redirect to /.
+    if (signUpData?.session) {
+      setIsLoading(false)
+      return
+    }
+
+    // If no session, the user either needs to confirm their email or the email is already taken.
+    // Supabase returns a user with identities=[] when the email already exists (security measure).
+    if (signUpData?.user?.identities?.length === 0) {
+      setError('An account with this email already exists. Please sign in instead.')
+      setMode('signin')
+      setIsLoading(false)
+      return
+    }
+
+    // Email confirmation is required — try auto sign-in as fallback
     const { error: signInErr } = await supabase.auth.signInWithPassword({
       email,
       password,
     })
 
     if (signInErr) {
-      // Account was created but auto-sign-in failed — show success anyway
-      setSuccess('Account created! Please sign in with your credentials.')
+      // Auto sign-in failed (likely needs email confirmation)
+      setSuccess('Account created! Please check your email to confirm, then sign in.')
       setMode('signin')
     }
-    // If signIn succeeds, App.jsx onAuthStateChange will auto-redirect to /
     setIsLoading(false)
   }
 
