@@ -1,0 +1,65 @@
+/*
+ * ===== SCROLL-TO-TOP BUTTON =====
+ * Floating button, bottom-right corner, hidden by default.
+ * Shows only on mobile (≤768px) when user scrolls down.
+ */
+
+.scroll-to-top {
+  display: none;           /* hidden on desktop */
+  position: fixed;
+  bottom: 1.5rem;
+  right: 1.5rem;
+  z-index: 90;
+
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(12, 15, 20, 0.85);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  color: var(--text-secondary);
+  cursor: pointer;
+
+  align-items: center;
+  justify-content: center;
+
+  opacity: 0;
+  transform: translateY(16px) scale(0.85);
+  pointer-events: none;
+  transition: opacity 0.3s ease, transform 0.3s ease, background 0.2s ease, color 0.2s ease;
+
+  /* subtle glow */
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.35), 0 0 0 1px rgba(99, 102, 241, 0.06);
+}
+
+/* Only show on mobile screens */
+@media (max-width: 768px) {
+  .scroll-to-top {
+    display: flex;
+  }
+}
+
+/* Visible state — fades in and slides up */
+.scroll-to-top.visible {
+  opacity: 1;
+  transform: translateY(0) scale(1);
+  pointer-events: all;
+}
+
+/* Hover / active styles */
+.scroll-to-top:hover {
+  background: rgba(99, 102, 241, 0.15);
+  color: var(--accent-light);
+  border-color: rgba(99, 102, 241, 0.3);
+  box-shadow: 0 4px 20px rgba(99, 102, 241, 0.15), 0 0 0 1px rgba(99, 102, 241, 0.15);
+}
+
+.scroll-to-top:active {
+  transform: translateY(0) scale(0.92);
+}
+
+/* SVG icon */
+.scroll-to-top svg {
+  flex-shrink: 0;
+}

@@ -23,6 +23,7 @@ import Library from './pages/Library'
 import Login from './pages/Login'
 import Contact from './pages/Contact'
 import Navbar from './components/Navbar'
+import ScrollToTop from './components/ScrollToTop'
 import './App.css'
 
 function App() {
@@ -57,6 +58,9 @@ function App() {
     <BrowserRouter>
       {/* Navbar is only shown when user is logged in */}
       {user && <Navbar user={user} />}
+
+      {/* Floating scroll-to-top button (mobile only) */}
+      {user && <ScrollToTop />}
 
       <Routes>
         {/* Login page — redirect to Home if already logged in */}

@@ -49,7 +49,16 @@ export default function Navbar({ user }) {
         <span />
       </button>
 
-      {/* Nav links — collapse into menu on mobile */}
+      {/* Backdrop overlay — closes sidebar when tapped (mobile only) */}
+      {menuOpen && (
+        <div
+          className="nav-backdrop"
+          onClick={() => setMenuOpen(false)}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* Nav links — collapse into sidebar on mobile */}
       <div className={`nav-links ${menuOpen ? 'nav-open' : ''}`}>
         <button
           className={`nav-btn ${location.pathname === '/' ? 'active' : ''}`}
