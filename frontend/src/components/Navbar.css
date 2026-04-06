@@ -1,127 +1,187 @@
-/* ===== NAVBAR ===== */
+/*
+ * ===== NAVBAR STYLES =====
+ * Sticky top bar with brand, links, user info, and mobile hamburger.
+ */
+
 .navbar {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 0 2rem;
-  height: 68px;
-  background: rgba(6, 10, 16, 0.85);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
+  height: 56px;
+  background: rgba(12, 15, 20, 0.92);
+  backdrop-filter: blur(16px);
   border-bottom: 1px solid var(--border);
   position: sticky;
   top: 0;
   z-index: 100;
 }
 
+/* ── Brand ── */
 .navbar-brand {
   display: flex;
   align-items: center;
-  gap: 0.6rem;
+  gap: 0.5rem;
   cursor: pointer;
   text-decoration: none;
 }
 
-.navbar-logo {
-  font-size: 1.5rem;
-}
+.navbar-logo { font-size: 1.1rem; }
 
 .navbar-title {
   font-family: 'Outfit', sans-serif;
-  font-size: 1.35rem;
+  font-size: 1.15rem;
   font-weight: 700;
-  background: linear-gradient(135deg, #c4b5fd, #8b5cf6);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
   letter-spacing: -0.03em;
 }
 
+/* ── Nav links (desktop) ── */
 .nav-links {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: 0.25rem;
 }
 
-.nav-links .nav-btn {
-  padding: 0.5rem 1rem;
+.nav-btn {
+  padding: 0.4rem 0.85rem;
   background: transparent;
   color: var(--text-secondary);
-  border: 1px solid transparent;
-  border-radius: var(--radius-sm);
+  border: none;
+  border-radius: var(--radius-xs);
   cursor: pointer;
-  font-size: 0.9rem;
+  font-size: 0.83rem;
   font-weight: 500;
   font-family: 'Inter', sans-serif;
   transition: var(--transition);
 }
 
-.nav-links .nav-btn:hover {
+.nav-btn:hover {
   color: var(--text-primary);
-  background: var(--bg-card);
-  border-color: var(--border);
+  background: rgba(255, 255, 255, 0.04);
 }
 
-.nav-links .nav-btn.active {
-  color: #c4b5fd;
-  background: var(--accent-soft);
-  border-color: rgba(139, 92, 246, 0.3);
+.nav-btn.active {
+  color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.06);
 }
 
+/* ── User avatar pill ── */
 .nav-user {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  padding: 0.35rem 0.75rem;
-  background: var(--bg-card);
+  gap: 0.4rem;
+  padding: 0.25rem 0.6rem;
+  background: rgba(255, 255, 255, 0.03);
   border: 1px solid var(--border);
   border-radius: 99px;
-  margin: 0 0.5rem;
+  margin: 0 0.3rem 0 0.5rem;
 }
 
 .nav-avatar {
-  width: 26px;
-  height: 26px;
+  width: 22px;
+  height: 22px;
   border-radius: 50%;
-  background: linear-gradient(135deg, #8b5cf6, #6d28d9);
+  background: var(--accent);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 0.75rem;
+  font-size: 0.65rem;
   font-weight: 700;
-  color: white;
+  color: #fff;
   flex-shrink: 0;
 }
 
 .nav-email {
-  font-size: 0.82rem;
+  font-size: 0.78rem;
   color: var(--text-secondary);
-  max-width: 160px;
+  max-width: 130px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
 }
 
+/* ── Sign out button ── */
 .logout-btn {
-  padding: 0.5rem 1rem;
+  padding: 0.38rem 0.8rem;
   background: transparent;
-  color: #f87171;
-  border: 1px solid rgba(239, 68, 68, 0.25);
-  border-radius: var(--radius-sm);
+  color: var(--text-secondary);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
   cursor: pointer;
-  font-size: 0.85rem;
-  font-weight: 600;
+  font-size: 0.78rem;
+  font-weight: 500;
   font-family: 'Inter', sans-serif;
   transition: var(--transition);
 }
 
 .logout-btn:hover {
-  background: rgba(239, 68, 68, 0.1);
-  border-color: rgba(239, 68, 68, 0.5);
+  color: #f87171;
+  background: rgba(239, 68, 68, 0.06);
+  border-color: rgba(239, 68, 68, 0.2);
 }
 
+/* ── Hamburger (hidden on desktop, visible on mobile) ── */
+.hamburger {
+  display: none; /* hidden by default on desktop */
+  flex-direction: column;
+  gap: 4px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 6px;
+  z-index: 110;
+}
+
+.hamburger span {
+  display: block;
+  width: 20px;
+  height: 2px;
+  background: var(--text-secondary);
+  border-radius: 2px;
+  transition: all 0.3s ease;
+}
+
+/* Animated X when open */
+.hamburger.open span:nth-child(1) { transform: translateY(6px) rotate(45deg); }
+.hamburger.open span:nth-child(2) { opacity: 0; }
+.hamburger.open span:nth-child(3) { transform: translateY(-6px) rotate(-45deg); }
+
+/* ── Mobile responsive ── */
 @media (max-width: 768px) {
   .navbar { padding: 0 1rem; }
-  .nav-email { display: none; }
-  .navbar-title { font-size: 1.1rem; }
+
+  /* Show hamburger */
+  .hamburger { display: flex; }
+
+  /* Nav links become a full-screen overlay */
+  .nav-links {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(12, 15, 20, 0.97);
+    flex-direction: column;
+    justify-content: center;
+    gap: 0.75rem;
+    z-index: 105;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+  }
+
+  .nav-links.nav-open {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .nav-btn {
+    font-size: 1.1rem;
+    padding: 0.75rem 1.5rem;
+  }
+
+  .nav-user { margin: 1rem 0 0; }
+  .nav-email { display: block; max-width: 200px; }
+  .logout-btn { margin-top: 0.5rem; font-size: 0.9rem; padding: 0.6rem 1.5rem; }
 }

@@ -1,307 +1,146 @@
-/* ═══════════════════════════════════════════
-   NovaNews – Contact / Get In Touch Page
-═══════════════════════════════════════════ */
+/*
+ * ===== CONTACT PAGE STYLES =====
+ * Simple, clean social links page. No mouse-tracking glow,
+ * no animated orbs — just well-designed cards.
+ */
 
 .ct-root {
-  position: relative;
-  min-height: calc(100vh - 68px);
-  overflow: hidden;
+  min-height: calc(100vh - 56px);
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: center;
-  padding: 3rem 2rem;
-  font-family: 'Inter', sans-serif;
+  padding: 3rem 2rem 4rem;
 }
 
-/* ── Background ── */
-.ct-bg {
-  position: absolute;
-  inset: 0;
-  pointer-events: none;
-  z-index: 0;
-}
-
-.ct-bg-grad-1 {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at top right, rgba(59,130,246,0.08), transparent 60%);
-}
-
-.ct-bg-grad-2 {
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(ellipse at bottom left, rgba(139,92,246,0.08), transparent 60%);
-}
-
-.ct-bg-grid {
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(to right, rgba(255,255,255,0.025) 1px, transparent 1px),
-    linear-gradient(to bottom, rgba(255,255,255,0.025) 1px, transparent 1px);
-  background-size: 4rem 4rem;
-  mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
-  -webkit-mask-image: radial-gradient(ellipse 60% 50% at 50% 0%, #000 70%, transparent 100%);
-}
-
-.ct-orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(128px);
-  animation: ct-pulse 4s ease-in-out infinite alternate;
-}
-
-.ct-orb-1 {
-  top: 60px;
-  left: 60px;
-  width: 280px;
-  height: 280px;
-  background: rgba(59, 130, 246, 0.18);
-}
-
-.ct-orb-2 {
-  bottom: 60px;
-  right: 60px;
-  width: 360px;
-  height: 360px;
-  background: rgba(139,92,246,0.12);
-  animation-delay: 0.7s;
-}
-
-@keyframes ct-pulse {
-  from { opacity: 0.5; transform: scale(1); }
-  to   { opacity: 1;   transform: scale(1.08); }
-}
-
-/* Mouse glow */
-.ct-mouse-glow {
-  position: fixed;
-  width: 384px;
-  height: 384px;
-  border-radius: 50%;
-  background: radial-gradient(circle, rgba(147,51,234,0.18), transparent);
-  pointer-events: none;
-  filter: blur(100px);
-  z-index: 0;
-  transition: left 0.15s ease-out, top 0.15s ease-out;
-}
-
-/* ── Content ── */
+/* ── Content wrapper ── */
 .ct-content {
-  position: relative;
-  z-index: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   width: 100%;
-  max-width: 1100px;
-}
-
-/* Shared enter animation */
-.ct-visible {
-  opacity: 1 !important;
-  transform: translateY(0) !important;
+  max-width: 720px;
 }
 
 /* ── Header ── */
 .ct-header {
-  text-align: center;
-  margin-bottom: 3rem;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.8s ease, transform 0.8s ease;
-}
-
-.ct-badge {
-  display: inline-block;
-  margin-bottom: 1rem;
-  padding: 0.35rem 1rem;
-  border-radius: 9999px;
-  border: 1px solid rgba(99,102,241,0.2);
-  background: linear-gradient(135deg, rgba(59,130,246,0.08), rgba(139,92,246,0.08));
-}
-
-.ct-badge span {
-  font-size: 0.82rem;
-  font-weight: 500;
-  background: linear-gradient(135deg, #60a5fa, #a78bfa);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  margin-bottom: 2rem;
+  border-bottom: 1px solid var(--border);
+  padding-bottom: 1.5rem;
 }
 
 .ct-header h1 {
-  font-family: 'Outfit', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 4rem);
+  font-family: 'Playfair Display', serif;
+  font-size: 2rem;
   font-weight: 700;
-  letter-spacing: -0.035em;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #fff, #94a3b8);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
+  color: var(--text-primary);
+  margin-bottom: 0.5rem;
+  letter-spacing: -0.02em;
 }
 
 .ct-subtitle {
-  font-size: 1.05rem;
-  color: var(--text-secondary, #8b949e);
-  max-width: 540px;
-  margin: 0 auto;
-  line-height: 1.65;
+  font-size: 0.92rem;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
 
 .ct-subtitle strong {
-  color: #c4b5fd;
+  color: var(--text-primary);
 }
 
-/* ── Cards Grid ── */
+/* ── Social cards grid ── */
 .ct-grid {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 1.25rem;
-  width: 100%;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 0.75rem;
 }
 
+/* ── Individual card ── */
 .ct-card {
-  position: relative;
-  background: linear-gradient(145deg, rgba(30,41,59,0.45), rgba(15,23,42,0.45));
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border: 1px solid rgba(71,85,105,0.35);
-  border-radius: 16px;
-  padding: 2rem;
-  overflow: hidden;
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1rem 1.15rem;
+  background: var(--bg-card-solid);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
   text-decoration: none;
   color: inherit;
-  opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s ease, transform 0.6s ease, border-color 0.4s, box-shadow 0.4s;
+  transition: var(--transition);
 }
 
 .ct-card:hover {
-  transform: translateY(-4px) !important;
-  border-color: rgba(100,116,139,0.5);
-  box-shadow: 0 12px 40px rgba(0,0,0,0.3);
+  border-color: var(--border-hover);
+  background: rgba(22, 27, 37, 0.9);
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-card);
 }
 
-/* Hover glow behind card */
-.ct-card-glow {
-  position: absolute;
-  inset: 0;
-  opacity: 0;
-  filter: blur(40px);
-  transition: opacity 0.5s;
-  z-index: 0;
-}
-.ct-card:hover .ct-card-glow { opacity: 0.6; }
-
-/* Shimmer */
-.ct-shimmer {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.04), transparent);
-  transform: translateX(-100%);
-  transition: transform 0.8s;
-  z-index: 1;
-}
-.ct-card:hover .ct-shimmer { transform: translateX(100%); }
-
-/* Card inner */
-.ct-card-inner {
-  position: relative;
-  z-index: 2;
-}
-
-/* Icon wrap with gradient bg */
+/* ── Icon wrapper ── */
 .ct-icon-wrap {
-  display: inline-flex;
-  padding: 0.7rem;
-  border-radius: 12px;
-  color: #fff;
-  margin-bottom: 1rem;
-  transition: transform 0.5s;
-}
-.ct-card:hover .ct-icon-wrap {
-  transform: rotate(6deg) scale(1.12);
-}
-
-/* Gradient classes */
-.ct-grad-github   { background: linear-gradient(135deg, #374151, #6b7280); }
-.ct-grad-linkedin { background: linear-gradient(135deg, #2563eb, #60a5fa); }
-.ct-grad-instagram{ background: linear-gradient(135deg, #9333ea, #ec4899, #f97316); }
-.ct-grad-whatsapp { background: linear-gradient(135deg, #16a34a, #4ade80); }
-.ct-grad-phone    { background: linear-gradient(135deg, #7c3aed, #a78bfa); }
-.ct-grad-email    { background: linear-gradient(135deg, #ea580c, #fb923c); }
-
-.ct-card-inner h3 {
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: var(--text-primary, #f0f6fc);
-  margin-bottom: 0.2rem;
-}
-
-.ct-card-inner p {
-  font-size: 0.85rem;
-  color: var(--text-muted, #484f58);
-  transition: color 0.3s;
-}
-.ct-card:hover .ct-card-inner p { color: var(--text-secondary, #8b949e); }
-
-/* Arrow */
-.ct-arrow {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
-  margin-top: 1rem;
-  font-size: 0.85rem;
-  font-weight: 500;
-  color: var(--text-muted, #484f58);
-  transition: color 0.3s;
-}
-.ct-card:hover .ct-arrow {
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: var(--radius-xs);
+  flex-shrink: 0;
   color: #fff;
 }
-.ct-arrow svg {
-  transition: transform 0.3s;
-}
-.ct-card:hover .ct-arrow svg {
-  transform: translateX(4px);
-}
 
-/* ── Callout ── */
-.ct-callout {
-  display: flex;
-  align-items: center;
-  gap: 0.75rem;
-  margin-top: 2.5rem;
-  padding: 0.85rem 1.5rem;
-  border-radius: 12px;
-  background: rgba(139,92,246,0.08);
-  border: 1px solid rgba(139,92,246,0.2);
-  opacity: 0;
-  transform: translateY(16px);
-  transition: opacity 0.6s ease, transform 0.6s ease;
+/* Icon background colors — simple, brand-appropriate */
+.ct-icon-github    { background: #333; }
+.ct-icon-linkedin  { background: #0a66c2; }
+.ct-icon-instagram { background: #c13584; }
+.ct-icon-whatsapp  { background: #25d366; }
+.ct-icon-phone     { background: var(--accent); }
+.ct-icon-email     { background: #ea580c; }
+
+/* ── Card text ── */
+.ct-card-text {
+  flex: 1;
+  min-width: 0;
 }
 
-.ct-callout-icon { font-size: 1.3rem; }
-
-.ct-callout-text {
+.ct-card-text h3 {
+  font-family: 'Outfit', sans-serif;
   font-size: 0.92rem;
-  color: var(--text-secondary, #8b949e);
-}
-
-.ct-callout-text strong {
-  color: #c4b5fd;
   font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 0.1rem;
 }
 
-/* ── Responsive ── */
-@media (max-width: 900px) {
-  .ct-grid { grid-template-columns: repeat(2, 1fr); }
+.ct-card-text p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
 }
 
-@media (max-width: 550px) {
+.ct-card:hover .ct-card-text p { color: var(--text-secondary); }
+
+/* ── Arrow ── */
+.ct-arrow {
+  font-size: 1rem;
+  color: var(--text-muted);
+  transition: var(--transition);
+  flex-shrink: 0;
+}
+
+.ct-card:hover .ct-arrow {
+  color: var(--text-primary);
+  transform: translateX(3px);
+}
+
+/* ── Phone callout ── */
+.ct-callout {
+  margin-top: 2rem;
+  padding: 0.85rem 1.15rem;
+  border-radius: var(--radius-sm);
+  background: rgba(99, 102, 241, 0.05);
+  border: 1px solid rgba(99, 102, 241, 0.1);
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  text-align: center;
+}
+
+/* ── Mobile ── */
+@media (max-width: 600px) {
+  .ct-root { padding: 2rem 1rem 3rem; }
   .ct-grid { grid-template-columns: 1fr; }
-  .ct-root { padding: 2rem 1rem; }
-  .ct-card { padding: 1.4rem; }
+  .ct-header h1 { font-size: 1.6rem; }
 }

@@ -458,8 +458,8 @@ export default function Login() {
 
         {/* Tagline */}
         <div className="lp-left-tagline">
-          <h2>Your daily news, supercharged with AI.</h2>
-          <p>Instant summaries, personalized feeds, and a smarter way to stay informed.</p>
+          <h2>Stay informed.<br />Read smarter.</h2>
+          <p>Your personalized news feed with intelligent summaries and curated stories from around the world.</p>
         </div>
 
         {/* Footer */}
@@ -483,8 +483,8 @@ export default function Login() {
 
         <div className="lp-form-wrap">
           <div className="lp-header">
-            <h1>{isSignUp ? 'Create your account' : 'Welcome back!'}</h1>
-            <p>{isSignUp ? 'Join NovaNews and start exploring.' : 'Sign in to your NovaNews account.'}</p>
+            <h1>{isSignUp ? 'Create account' : 'Welcome back'}</h1>
+            <p>{isSignUp ? 'Start your free NovaNews account.' : 'Sign in to continue reading.'}</p>
           </div>
 
           {/* ── Google OAuth ── */}

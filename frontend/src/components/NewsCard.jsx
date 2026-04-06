@@ -1,3 +1,20 @@
+/**
+ * NewsCard.jsx — A single news article card.
+ *
+ * Props:
+ *   article       — The article object from NewsAPI (title, description, url, etc.)
+ *   user          — The logged-in user (needed for saving)
+ *   category      — Current category being viewed (saved along with the article)
+ *   alreadySaved  — Boolean, true if the user already bookmarked this article
+ *   onSaved       — Callback when an article is saved (parent updates its list)
+ *
+ * Features:
+ *   - Shows thumbnail with fallback if image is missing/broken
+ *   - Source name badge overlay
+ *   - "Summarize" button → calls the AI backend
+ *   - "Save" button → bookmarks to Supabase
+ */
+
 import { useState } from 'react'
 import axios from 'axios'
 import { supabase } from '../supabaseClient'
@@ -5,22 +22,23 @@ import './NewsCard.css'
 
 const BACKEND = import.meta.env.VITE_BACKEND_URL
 
-// Category-based fallback icons for when there's no image
-const CATEGORY_ICONS = {
-  technology: '💻', science: '🔬', business: '📊', health: '🏥',
-  sports: '⚽', entertainment: '🎬', general: '📰'
-}
+export default function NewsCard({ article, user, category = 'general', alreadySaved = false, onSaved }) {
+  // ───── State ─────
+  const [summary, setSummary] = useState('')            // AI-generated summary text
+  const [loadingSummary, setLoadingSummary] = useState(false)  // loading spinner for AI
+  const [saved, setSaved] = useState(alreadySaved)      // whether this card is bookmarked
+  const [imgError, setImgError] = useState(false)       // true if thumbnail failed to load
 
-export default function NewsCard({ article, user, alreadySaved = false, onSaved }) {
-  const [summary, setSummary] = useState('')
-  const [loadingSummary, setLoadingSummary] = useState(false)
-  const [saved, setSaved] = useState(alreadySaved)
-  const [imgError, setImgError] = useState(false)
-
+  // Determine if we have a valid image to show
   const hasImage = article.urlToImage && !imgError
 
+  /**
+   * Calls the backend AI endpoint to summarize this article.
+   * The summary is shown inline below the description.
+   */
   const getSummary = async () => {
-    if (summary) return // Don't re-fetch if we already have one
+    if (summary) return // already have one — skip
+
     setLoadingSummary(true)
     try {
       const res = await axios.post(`${BACKEND}/api/ai/summarize`, {
@@ -30,14 +48,20 @@ export default function NewsCard({ article, user, alreadySaved = false, onSaved 
       setSummary(res.data.summary)
     } catch (err) {
       console.error('AI Summary failed:', err)
-      setSummary('Could not generate summary right now. Please try again. 🤖')
+      setSummary('Could not generate summary. Please try again later.')
     }
     setLoadingSummary(false)
   }
 
+  /**
+   * Saves this article to the user's Supabase library.
+   * Sends the JWT token for RLS authentication.
+   */
   const saveArticle = async () => {
-    if (saved) return // Already saved — do nothing
+    if (saved) return // already saved
+
     try {
+      // Get the current auth session for the JWT
       const { data: { session } } = await supabase.auth.getSession()
       const token = session?.access_token
 
@@ -47,24 +71,26 @@ export default function NewsCard({ article, user, alreadySaved = false, onSaved 
         description: article.description,
         url: article.url,
         urlToImage: article.urlToImage || null,
-        summary: summary || null
+        summary: summary || null,
+        category: category   // ← save which category this article was in
       }, {
         headers: { Authorization: `Bearer ${token}` }
       })
+
       setSaved(true)
-      if (onSaved) onSaved(article.url)
+      if (onSaved) onSaved(article.url) // notify parent
     } catch (err) {
       console.error('Failed to save article:', err)
       alert("Couldn't save the article. Please try again.")
     }
   }
 
-  const sourceName = article.source?.name || 'Unknown Source'
-  const fallbackIcon = CATEGORY_ICONS[article.category] || '📰'
+  // Extract source name for the badge
+  const sourceName = article.source?.name || 'News'
 
   return (
     <div className="news-card">
-      {/* Thumbnail area — always rendered, shows fallback if no valid image */}
+      {/* ── Thumbnail ── */}
       <div className="card-thumbnail">
         {hasImage ? (
           <img
@@ -75,33 +101,35 @@ export default function NewsCard({ article, user, alreadySaved = false, onSaved 
           />
         ) : (
           <div className="thumb-fallback">
-            <span className="thumb-fallback-icon">{fallbackIcon}</span>
+            <span className="thumb-fallback-icon">📰</span>
             <span className="thumb-fallback-text">No Image</span>
           </div>
         )}
+
+        {/* Source badge (e.g., "BBC News") */}
         <span className="card-source">{sourceName}</span>
-        {saved && <span className="card-saved-badge">✓ Saved</span>}
+
+        {/* Green "Saved" badge if bookmarked */}
+        {saved && <span className="card-saved-badge">Saved</span>}
       </div>
 
+      {/* ── Content ── */}
       <div className="card-content">
         <h3>{article.title}</h3>
         {article.description && <p>{article.description}</p>}
 
+        {/* AI Summary — shows after pressing Summarize */}
         {summary && (
           <div className="summary">
-            <strong>✨ AI Summary</strong>
+            <strong>Summary</strong>
             {summary}
           </div>
         )}
 
+        {/* ── Action buttons ── */}
         <div className="card-actions">
-          <a
-            href={article.url}
-            target="_blank"
-            rel="noreferrer"
-            className="btn-read"
-          >
-            Read Article →
+          <a href={article.url} target="_blank" rel="noreferrer" className="btn-read">
+            Read Article
           </a>
 
           <button
@@ -109,16 +137,17 @@ export default function NewsCard({ article, user, alreadySaved = false, onSaved 
             disabled={loadingSummary || !!summary}
             className={`btn-ai ${loadingSummary ? 'loading' : ''}`}
           >
-            {loadingSummary ? 'Summarizing…' : summary ? '✓ Summarized' : '✨ AI Summary'}
+            {loadingSummary ? 'Summarizing…' : summary ? 'Summarized' : 'Summarize'}
           </button>
 
+          {/* Save button — only shown if user is logged in */}
           {user && (
             <button
               onClick={saveArticle}
               disabled={saved}
               className={`btn-save ${saved ? 'saved' : ''}`}
             >
-              {saved ? (alreadySaved ? '📌 Already Saved' : '✓ Saved') : '🔖 Save'}
+              {saved ? 'Saved' : 'Save'}
             </button>
           )}
         </div>
